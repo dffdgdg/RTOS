@@ -38,7 +38,8 @@ void Timer::update()
  * @brief Получить текущее время
  * @return Количество миллисекунд с начала работы
  */
-uint32_t Timer::millis() const {
+uint32_t Timer::millis() const 
+{
     uint32_t m;
     noInterrupts();
     m = _millis;

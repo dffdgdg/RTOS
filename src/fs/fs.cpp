@@ -1,8 +1,10 @@
 #include "fs.h"
 #include <Arduino.h>
 #include "fs/logger.h"
+#include "kernel/scheduler.h"
 
 extern Logger logger;
+extern Scheduler kernel;
 FileSystem fs; 
 
 /**
@@ -19,7 +21,7 @@ FileSystem::FileSystem()
 
 /**
  * @brief Деструктор файловой системы
- */
+ */ 
 FileSystem::~FileSystem() 
 {
     for (int i = 0; i < fileCount; i++) 
@@ -160,6 +162,12 @@ bool FileSystem::createFile(const String& name, const String& content)
     files[fileCount].name = name;
     files[fileCount].isBinary = false;
     files[fileCount].data = new uint8_t[content.length() + 1];
+        if (files[fileCount].data == nullptr) 
+        {
+        logger.log("ERR: Memory allocation failed");
+        kernel.emergencyDump("Memory allocation failed"); 
+        return false;
+        }
     memcpy(files[fileCount].data, content.c_str(), content.length() + 1);
     files[fileCount].size = content.length() + 1;
     

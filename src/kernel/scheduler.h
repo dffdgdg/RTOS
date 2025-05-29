@@ -6,7 +6,7 @@
 
 #define MAX_TASKS 8        
 #define MAX_SEMAPHORES 5   
-#define WDT_TIMEOUT WDTO_2S // Таймаут watchdog-таймера (2 сек)
+#define WDT_TIMEOUT WDTO_4S 
 
 typedef void (*TaskFunction)();
 
@@ -35,9 +35,18 @@ struct Task
 class SystemGuard 
 {
 public:
+    static bool isEnabled() 
+    {
+        return (WDTCSR & _BV(WDIE)) != 0;
+    }
     static void enable(uint8_t timeout = WDT_TIMEOUT) 
     {
-        wdt_enable(timeout);
+        cli(); 
+        wdt_reset(); 
+        MCUSR &= ~(1 << WDRF); 
+        WDTCSR |= (1 << WDCE) | (1 << WDE); 
+        WDTCSR = (1 << WDIE) | timeout; 
+        sei(); 
     }
     
     static void reset() 
@@ -79,6 +88,16 @@ public:
     
     uint8_t getPriority(TaskFunction function) const;
     
+    /**
+     * @brief Получение указателя на функцию задачи
+     * @param index Индекс задачи
+     * @return Указатель на функцию или nullptr при ошибке
+     */
+    TaskFunction getTaskFunction(uint8_t index) const 
+    {
+        if (index >= taskCount) return nullptr;
+        return tasks[index].function;
+    }
     void run();
     
     uint8_t getTaskCount() const;
@@ -89,6 +108,7 @@ public:
     bool sem_wait(int sem_id);
     bool sem_signal(int sem_id);
     bool sem_delete(int sem_id);
+    void begin();
 };
 
 extern Scheduler kernel; 

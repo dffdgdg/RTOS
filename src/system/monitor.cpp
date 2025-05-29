@@ -27,7 +27,7 @@ int SystemMonitor::freeMemoryPercent()
 
 bool SystemMonitor::isMemoryCritical() 
 {
-    return freeMemoryPercent() < 5;
+    return freeMemoryPercent() < 0.1;
 }
 
 float SystemMonitor::getVccVoltage() 

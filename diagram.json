@@ -4,13 +4,44 @@
   "editor": "wokwi",
   "parts": [
     { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
-    { "type": "wokwi-led", "id": "led1", "top": 50, "left": 200, "attrs": { "color": "red" } },
-    { "type": "wokwi-resistor", "id": "r1", "top": 50, "left": 260, "attrs": { "value": "220" } }
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -80.4,
+      "left": 186.2,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -82.45,
+      "left": 249.6,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": -332.57,
+      "left": -3.2,
+      "attrs": { "pins": "4,5,6,7,8,9" }
+    }
   ],
   "connections": [
     [ "led1:A", "uno:13", "green", [ "v0" ] ],
     [ "r1:2", "uno:GND.1", "black", [ "v0" ] ],
-    [ "led1:C", "r1:1", "green", [ "v0" ] ]
+    [ "led1:C", "r1:1", "green", [ "v19.2", "h-57.2" ] ],
+    [ "lcd1:VSS", "uno:GND.1", "black", [ "h0" ] ],
+    [ "lcd1:VDD", "uno:5V", "red", [ "h0" ] ],
+    
+    [ "lcd1:VO", "uno:GND.1", "black", [ "h0" ] ],
+    [ "lcd1:RS", "uno:4", "green", [ "v0" ] ],
+    [ "lcd1:E", "uno:5", "blue", [ "v0" ] ],
+    [ "lcd1:D4", "uno:6", "yellow", [ "v0" ] ],
+    [ "lcd1:D5", "uno:7", "orange", [ "v0" ] ],
+    [ "lcd1:D6", "uno:8", "purple", [ "v0" ] ],
+    [ "lcd1:D7", "uno:9", "gray", [ "v0" ] ],
+    [ "lcd1:A", "uno:5V", "red", [ "h0" ] ],
+    [ "lcd1:K", "uno:GND.1", "black", [ "h0" ] ]
   ],
   "dependencies": {}
 }

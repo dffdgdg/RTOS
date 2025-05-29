@@ -30,6 +30,12 @@ void Scheduler::emergencyDump(const char* reason)
     asm volatile ("jmp 0"); 
 }
 
+ISR(WDT_vect) 
+{
+    kernel.emergencyDump("Watchdog timeout");
+    wdt_enable(WDTO_15MS); 
+    while(1);
+}
 /**
  * @brief Поиск задачи по функции
  * @param function Указатель на функцию задачи
@@ -98,7 +104,7 @@ void Scheduler::sortTasks()
 void Scheduler::run() 
 {
     uint32_t now = sysTimer.millis();
-    
+
     for(int i = 0; i < taskCount; i++) 
     {
         if(tasks[i].enabled && (now - tasks[i].lastRun >= tasks[i].period)) 
@@ -118,7 +124,7 @@ void Scheduler::run()
         }
     }
     
-    //checkTaskTimings(); 
+    checkTaskTimings(); 
 }
 
 /**
@@ -130,7 +136,7 @@ void Scheduler::checkTaskTimings()
     {
         if(tasks[i].maxRunTime > tasks[i].period) 
         {
-           // emergencyDump("Task overrun");
+           emergencyDump("Task overrun");
         }
     }
 }
@@ -239,4 +245,18 @@ bool Scheduler::sem_delete(int sem_id)
     }
     semCount--;
     return true;
+}
+
+void Scheduler::begin() 
+{
+    noInterrupts();
+        Serial.println(F("=== OS Started ==="));
+        Serial.print(F("OS v1.0 | Time: "));
+        Serial.print(sysTimer.millis());
+        Serial.println(F(" ms"));
+        Serial.print(F("Tasks: "));
+        Serial.println(taskCount);
+        Serial.print(F("Watchdog: "));
+        Serial.println(SystemGuard::isEnabled() ? F("ON") : F("OFF")); 
+    interrupts();
 }

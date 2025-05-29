@@ -1,6 +1,8 @@
 #include "syscalls.h"
 #include <Arduino.h>
+#include "driver/timer.h"
 
+extern Timer sysTimer;
 namespace os 
 {
     /**

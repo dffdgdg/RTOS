@@ -20,7 +20,7 @@ public:
     void toggle();
     void setPWM(uint8_t duty);
     void attachInterrupt(void (*handler)(), int mode);
-
+    uint8_t getPin() const { return _pin; }
 private:
     uint8_t _pin;
     PinMode _current_mode;

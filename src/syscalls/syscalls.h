@@ -20,6 +20,7 @@ namespace os
     bool sem_wait(int sem_id);
     bool sem_signal(int sem_id);
     bool sem_delete(int sem_id);
+    String task_info();
 };
 
 #endif
